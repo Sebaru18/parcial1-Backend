@@ -36,6 +36,9 @@ jobs:
               # Activar el entorno virtual
               source env/bin/activate &&
 
+              # Instalar dependencias necesarias
+              pip install -r requirements.txt &&
+
               # Prueba Unitaria
               pytest &&
 
@@ -44,15 +47,10 @@ jobs:
               git reset --hard origin/master &&
               git pull origin master &&
 
-              # Instalar dependencias necesarias
-              pip install -r requirements.txt &&
-
               # Detener cualquier proceso que esté usando el puerto 5000
               sudo fuser -k 5000/tcp &&
 
               # Ejecutar la aplicación Flask
               gunicorn -b 0.0.0.0:5000 programa:app --daemon
-
-              # Desactivar el entorno virtual
              
           EOF
