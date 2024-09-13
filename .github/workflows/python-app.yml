@@ -1,14 +1,34 @@
-name: Deploy
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [ master ]
 
 jobs:
-  Deploy:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest  # O el comando específico para ejecutar tus pruebas
+
+  deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
-    
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,19 +44,19 @@ jobs:
           SERVER_IP: ${{ secrets.SSH_HOST }}
           EC2_USER: ${{ secrets.USER_NAME }}
           APP_DIR: /home/ubuntu/backend/parcial1-backend
-          APP_FILE: programa.py
+          APP_FILE: app.py
           ENVIRONMENT: production
       
         run: |
           echo "$EC2_PRIVATE_KEY" > ec2_key && chmod 600 ec2_key
           ssh -o StrictHostKeyChecking=no -i ec2_key ${EC2_USER}@${SERVER_IP} << 'EOF'
               # Acceder al directorio del proyecto
-              cd /home/ubuntu/backend/parcial1-Backend && ls &&
+              cd /home/ubuntu/backend/parcial1-backend && ls &&
 
               # Activar el entorno virtual
               source env/bin/activate &&
 
-              # Actualizar el código desde la rama dev
+              # Actualizar el código desde la rama master
               git fetch --all &&
               git reset --hard origin/master &&
               git pull origin master &&
@@ -49,7 +69,4 @@ jobs:
 
               # Ejecutar la aplicación Flask
               gunicorn -b 0.0.0.0:5000 programa:app --daemon
-
-              # Desactivar el entorno virtual
-             
           EOF
