@@ -3,7 +3,7 @@ from flask_cors import CORS
 import psycopg2  # O mysql.connector para MySQL
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*":{"origins":"44.204.9.62"}})
 
 # Conexión a la base de datos (reemplaza con tus credenciales y la IP de la base de datos en otra instancia)
 conn = psycopg2.connect(
