@@ -29,7 +29,7 @@ jobs:
       
         run: |
           echo "$EC2_PRIVATE_KEY" > ec2_key && chmod 600 ec2_key
-          ssh -o StrictHostKeyChecking=no -i ec2_key ${EC2_USER}@${SERVER_IP} '
+          ssh -o StrictHostKeyChecking=no -i ec2_key ${EC2_USER}@${SERVER_IP} << EOF
               # Acceder al directorio del proyecto
               cd backend/parcial1-backend && ls &&
 
@@ -52,4 +52,4 @@ jobs:
 
               # Desactivar el entorno virtual
              
-              '
+          EOF
