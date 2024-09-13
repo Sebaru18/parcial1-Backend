@@ -7,7 +7,7 @@ CORS(app, resources={r"/api/*":{"origins":"44.204.9.62"}})
 
 # Conexión a la base de datos (reemplaza con tus credenciales y la IP de la base de datos en otra instancia)
 conn = psycopg2.connect(
-    database="users", user='parcial', password='123', host='52.90.154.16', port='5432'
+    database="users", user='parcial', password='123', host='52.90.133.194', port='5432'
 )
 
 @app.route('/register', methods=['POST'])
