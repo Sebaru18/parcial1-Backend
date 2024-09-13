@@ -23,10 +23,15 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m venv env
-          source env/bin/activate
-          pytest  # ejecuta tus pruebas
+           echo "$EC2_PRIVATE_KEY" > ec2_key && chmod 600 ec2_key
+            ssh -o StrictHostKeyChecking=no -i ec2_key ${EC2_USER}@${SERVER_IP} << 'EOF'
+              # Acceder al directorio del proyecto
+              cd /home/ubuntu/backend/parcial1-Backend && ls &&
 
+              # Activar el entorno virtual
+              source env/bin/activate &&
+              pytest  # ejecuta tus pruebas
+            EOF
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
