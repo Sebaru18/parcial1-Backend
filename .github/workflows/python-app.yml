@@ -23,7 +23,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest  # O el comando específico para ejecutar tus pruebas
+          pytest  # ejecuta tus pruebas
 
   deploy:
     name: Deploy to EC2
